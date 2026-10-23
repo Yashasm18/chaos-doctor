@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chaos-doctor"
+version = "0.1.0"
+description = "Two open-weight AIs fight over your agent: one attacks it, one heals it, until it's battle-tested."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Chaos Doctor team" }]
+keywords = ["llm", "agents", "chaos-engineering", "resilience", "ollama", "agent-skills"]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Testing",
+]
+dependencies = [
+  "agentic-chaos>=0.8,<0.9",
+  "openai>=1.40",
+  "httpx>=0.27",
+  "typer>=0.12",
+  "rich>=13.7",
+]
+
+[project.optional-dependencies]
+data = ["great-generator>=0.1.8", "pandas>=2.0"]
+dashboard = ["streamlit>=1.36"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+chaos-doctor = "chaos_doctor.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/Yashasm18/chaos-doctor"
+Issues = "https://github.com/Yashasm18/chaos-doctor/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/chaos_doctor"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]  # typer declares CLI options as default arguments

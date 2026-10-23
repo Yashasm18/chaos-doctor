@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Test
+        run: pytest
+
+  skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate Agent Skill
+        run: |
+          pip install skills-ref
+          agentskills validate ./chaos-doctor
+
+  resilience-gate:
+    # Dogfooding: the demo agent, once healed, must pass the gate it ships with.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Offline battle
+        run: chaos-doctor battle examples/shop_agent/agent.py --offline --trials 1 --out battle-out
+      - name: Healed agent passes the gate
+        run: chaos-doctor scan battle-out/agent.py --trials 1 --min-score 90
+      - uses: actions/upload-artifact@v4
+        with:
+          name: battle-log
+          path: battle-out/battle.json
