@@ -222,5 +222,7 @@ __marimo__/
 # Chaos Doctor run output
 .chaos-doctor/
 battle-out/
-.vercel/
 .vercel
+
+# Built by scripts/build_site.py
+site/data/
