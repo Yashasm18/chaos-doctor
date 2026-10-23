@@ -1,0 +1,362 @@
+{
+  "summary": {
+    "doctor": "rules",
+    "cases": 20,
+    "fixed": 20,
+    "function_correct": 0,
+    "recipe_correct": 20,
+    "placement_corrected": 0,
+    "fell_back_to_rules": 20,
+    "avg_seconds": 0.0
+  },
+  "hardware": "rules, no model",
+  "rows": [
+    {
+      "case": "shop/token_timeout",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "ask_llm",
+      "model_function": "ask_llm",
+      "expected_function": "ask_llm",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "token_timeout is not handled in ask_llm()"
+    },
+    {
+      "case": "shop/rate_limit_storm",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "ask_llm",
+      "model_function": "ask_llm",
+      "expected_function": "ask_llm",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "rate_limit_storm is not handled in ask_llm()"
+    },
+    {
+      "case": "shop/silent_degradation",
+      "recipe": "validate_output",
+      "params": {
+        "retries": 3
+      },
+      "function": "ask_llm",
+      "model_function": "ask_llm",
+      "expected_function": "ask_llm",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "silent_degradation is not handled in ask_llm()"
+    },
+    {
+      "case": "shop/context_length",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "ask_llm",
+      "model_function": "ask_llm",
+      "expected_function": "ask_llm",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "context_length is not handled in ask_llm()"
+    },
+    {
+      "case": "shop/tool_failure",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "get_order",
+      "model_function": "get_order",
+      "expected_function": "get_order",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "tool_failure@lookup_order is not handled in get_order()"
+    },
+    {
+      "case": "shop/prompt_injection",
+      "recipe": "sanitize",
+      "params": {},
+      "function": "get_order",
+      "model_function": "get_order",
+      "expected_function": "get_order",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "prompt_injection@lookup_order is not handled in get_order()"
+    },
+    {
+      "case": "helpdesk/token_timeout",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "complete",
+      "model_function": "complete",
+      "expected_function": "complete",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "token_timeout is not handled in complete()"
+    },
+    {
+      "case": "helpdesk/rate_limit_storm",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "complete",
+      "model_function": "complete",
+      "expected_function": "complete",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "rate_limit_storm is not handled in complete()"
+    },
+    {
+      "case": "helpdesk/silent_degradation",
+      "recipe": "validate_output",
+      "params": {
+        "retries": 3
+      },
+      "function": "complete",
+      "model_function": "complete",
+      "expected_function": "complete",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "silent_degradation is not handled in complete()"
+    },
+    {
+      "case": "helpdesk/context_length",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "complete",
+      "model_function": "complete",
+      "expected_function": "complete",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "context_length is not handled in complete()"
+    },
+    {
+      "case": "helpdesk/tool_failure",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "load_ticket",
+      "model_function": "load_ticket",
+      "expected_function": "load_ticket",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "tool_failure@fetch_ticket is not handled in load_ticket()"
+    },
+    {
+      "case": "helpdesk/prompt_injection",
+      "recipe": "sanitize",
+      "params": {},
+      "function": "load_ticket",
+      "model_function": "load_ticket",
+      "expected_function": "load_ticket",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "prompt_injection@fetch_ticket is not handled in load_ticket()"
+    },
+    {
+      "case": "travel/token_timeout",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "generate_reply",
+      "model_function": "generate_reply",
+      "expected_function": "generate_reply",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "token_timeout is not handled in generate_reply()"
+    },
+    {
+      "case": "travel/rate_limit_storm",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "generate_reply",
+      "model_function": "generate_reply",
+      "expected_function": "generate_reply",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "rate_limit_storm is not handled in generate_reply()"
+    },
+    {
+      "case": "travel/silent_degradation",
+      "recipe": "validate_output",
+      "params": {
+        "retries": 3
+      },
+      "function": "generate_reply",
+      "model_function": "generate_reply",
+      "expected_function": "generate_reply",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "silent_degradation is not handled in generate_reply()"
+    },
+    {
+      "case": "travel/context_length",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "generate_reply",
+      "model_function": "generate_reply",
+      "expected_function": "generate_reply",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "context_length is not handled in generate_reply()"
+    },
+    {
+      "case": "travel/tool_failure",
+      "recipe": "retry",
+      "params": {
+        "attempts": 4,
+        "backoff_s": 0.05
+      },
+      "function": "lookup_flight",
+      "model_function": "lookup_flight",
+      "expected_function": "lookup_flight",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "tool_failure@flight_status_api is not handled in lookup_flight()"
+    },
+    {
+      "case": "travel/prompt_injection",
+      "recipe": "sanitize",
+      "params": {},
+      "function": "lookup_flight",
+      "model_function": "lookup_flight",
+      "expected_function": "lookup_flight",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "prompt_injection@flight_status_api is not handled in lookup_flight()"
+    },
+    {
+      "case": "shop/rate_limit_storm+weak_retry",
+      "recipe": "retry",
+      "params": {
+        "attempts": 6,
+        "backoff_s": 0.05
+      },
+      "function": "ask_llm",
+      "model_function": "ask_llm",
+      "expected_function": "ask_llm",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "ask_llm() has retry but it gives up before rate_limit_storm clears"
+    },
+    {
+      "case": "travel/silent_degradation+weak_validate",
+      "recipe": "validate_output",
+      "params": {
+        "retries": 5
+      },
+      "function": "generate_reply",
+      "model_function": "generate_reply",
+      "expected_function": "generate_reply",
+      "function_correct": false,
+      "recipe_correct": true,
+      "placement_corrected": false,
+      "used_rules": true,
+      "fixed": true,
+      "seconds": 0.0,
+      "root_cause": "generate_reply() has validate_output but it gives up before silent_degradation clears"
+    }
+  ]
+}
