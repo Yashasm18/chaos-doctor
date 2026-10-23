@@ -222,3 +222,4 @@ __marimo__/
 # Chaos Doctor run output
 .chaos-doctor/
 battle-out/
+.vercel/

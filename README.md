@@ -13,6 +13,8 @@ with a resilience score.
 
 Built at Hacktoberfest Hack Day Bengaluru 2026 for the **Best Open-Source AI Project** track.
 
+**Live demo:** watch a recorded real-model battle, or run a fresh one, at the demo site (`site/`, deployed on Vercel). In the recorded run, qwen3:4b made all 6 diagnoses itself; all 6 patches were kept (one had its placement corrected automatically), taking the agent 0 -> 100 -> 83 -> 100 -> 83 -> 100.
+
 ```
 Round 1  Attacked:   0/100   5 standard faults, every one crashes the agent
          Doctor:     retry on ask_llm()        0 -> 60   kept

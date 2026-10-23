@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "installCommand": "",
+  "outputDirectory": "site",
+  "functions": {
+    "api/battle.py": {
+      "maxDuration": 60,
+      "includeFiles": "{src,examples}/**"
+    }
+  }
+}
