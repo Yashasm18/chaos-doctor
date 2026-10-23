@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" role="img" aria-label="How Chaos Doctor works: scan, score, Doctor AI, patch, verify, Attacker AI, repeat">
+  <title>How Chaos Doctor works</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Helvetica, Arial, sans-serif; fill: #0f172a; }
+      .t { font-size: 15px; font-weight: 700; }
+      .b { font-size: 12px; fill: #334155; }
+      .lbl { font-size: 11.5px; fill: #475569; font-style: italic; }
+      .box { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.4; }
+      .doc { fill: #ecfdf5; stroke: #10b981; stroke-width: 2.2; }
+      .atk { fill: #fff1f2; stroke: #f43f5e; stroke-width: 2.2; }
+      .agent { fill: #eff6ff; stroke: #3b82f6; stroke-width: 1.6; }
+      .line { fill: none; stroke: #475569; stroke-width: 1.6; }
+      .out { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="999" height="599" rx="18" fill="#ffffff" stroke="#e2e8f0"/>
+
+  <text x="40" y="46" style="font-size:22px;font-weight:800">How Chaos Doctor works</text>
+  <text x="40" y="72" class="b" style="font-size:13.5px">Two open-weight models (Qwen3 via Ollama) take turns. agentic-chaos does the breaking and the judging.</text>
+
+  <!-- row 1 -->
+  <g>
+    <rect class="agent" x="20" y="110" width="172" height="92" rx="12"/>
+    <text class="t" x="36" y="138">Your agent</text>
+    <text class="b" x="36" y="162">agent.py exposes</text>
+    <text class="b" x="36" y="180">client, TOOLS, run()</text>
+  </g>
+  <g>
+    <rect class="box" x="210" y="110" width="172" height="92" rx="12"/>
+    <text class="t" x="226" y="138">1  Scan</text>
+    <text class="b" x="226" y="162">agentic-chaos injects</text>
+    <text class="b" x="226" y="180">faults: model + tools</text>
+  </g>
+  <g>
+    <rect class="box" x="400" y="110" width="172" height="92" rx="12"/>
+    <text class="t" x="416" y="138">2  Score 0-100</text>
+    <text class="b" x="416" y="162">agentic-chaos contracts</text>
+    <text class="b" x="416" y="180">+ the agent's check()</text>
+  </g>
+  <g>
+    <rect class="doc" x="590" y="110" width="172" height="92" rx="12"/>
+    <text class="t" x="606" y="138" style="fill:#047857">3  Doctor AI</text>
+    <text class="b" x="606" y="162">Qwen3 reads the failure</text>
+    <text class="b" x="606" y="180">→ JSON prescription</text>
+  </g>
+  <g>
+    <rect class="box" x="780" y="110" width="172" height="92" rx="12"/>
+    <text class="t" x="796" y="138">4  Patch</text>
+    <text class="b" x="796" y="162">ast adds one guard</text>
+    <text class="b" x="796" y="180">decorator; must parse</text>
+  </g>
+
+  <!-- row 2 -->
+  <g>
+    <rect class="box" x="780" y="300" width="172" height="92" rx="12"/>
+    <text class="t" x="796" y="328">5  Verify</text>
+    <text class="b" x="796" y="352">re-scan: keep if score</text>
+    <text class="b" x="796" y="370">goes up, else roll back</text>
+  </g>
+  <g>
+    <rect class="atk" x="400" y="300" width="172" height="92" rx="12"/>
+    <text class="t" x="416" y="328" style="fill:#be123c">6  Attacker AI</text>
+    <text class="b" x="416" y="352">Qwen3 reads patched</text>
+    <text class="b" x="416" y="370">code, picks next attack</text>
+  </g>
+
+  <!-- arrows -->
+  <path class="line" d="M192 156H208" marker-end="url(#arrow)"/>
+  <path class="line" d="M382 156H398" marker-end="url(#arrow)"/>
+  <path class="line" d="M572 156H588" marker-end="url(#arrow)"/>
+  <path class="line" d="M762 156H778" marker-end="url(#arrow)"/>
+  <path class="line" d="M866 202V298" marker-end="url(#arrow)"/>
+  <path class="line" d="M780 330H676V204" marker-end="url(#arrow)"/>
+  <path class="line" d="M780 372H574" marker-end="url(#arrow)"/>
+  <path class="line" d="M400 346H296V204" marker-end="url(#arrow)"/>
+
+  <text class="lbl" x="200" y="100">round 1: 5 classic faults</text>
+  <text class="lbl" x="686" y="250">still failing: next fix</text>
+  <text class="lbl" x="600" y="392">all pass: next round</text>
+  <text class="lbl" x="306" y="268">new attack (incl. prompt</text>
+  <text class="lbl" x="306" y="284">injection it writes itself)</text>
+
+  <!-- outputs -->
+  <text x="40" y="452" style="font-size:14px;font-weight:700">What you get</text>
+  <g>
+    <rect class="out" x="40" y="466" width="215" height="60" rx="10"/>
+    <text class="b" x="56" y="491" style="font-weight:700;fill:#0f172a">battle.json</text>
+    <text class="b" x="56" y="510">replayed on the demo site</text>
+  </g>
+  <g>
+    <rect class="out" x="270" y="466" width="215" height="60" rx="10"/>
+    <text class="b" x="286" y="491" style="font-weight:700;fill:#0f172a">Patched agent + diffs</text>
+    <text class="b" x="286" y="510">every fix is reviewable</text>
+  </g>
+  <g>
+    <rect class="out" x="500" y="466" width="215" height="60" rx="10"/>
+    <text class="b" x="516" y="491" style="font-weight:700;fill:#0f172a">AIOS v0.4 Runs</text>
+    <text class="b" x="516" y="510">for the DeepAgentLabs tools</text>
+  </g>
+  <g>
+    <rect class="out" x="730" y="466" width="222" height="60" rx="10"/>
+    <text class="b" x="746" y="491" style="font-weight:700;fill:#0f172a">CI gate</text>
+    <text class="b" x="746" y="510">scan --min-score 70</text>
+  </g>
+
+  <!-- legend -->
+  <rect x="40" y="552" width="14" height="14" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+  <text class="b" x="60" y="564">open-weight model (Doctor)</text>
+  <rect x="250" y="552" width="14" height="14" rx="3" fill="#fff1f2" stroke="#f43f5e" stroke-width="2"/>
+  <text class="b" x="270" y="564">open-weight model (Attacker)</text>
+  <rect x="470" y="552" width="14" height="14" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/>
+  <text class="b" x="490" y="564">deterministic code (no AI)</text>
+</svg>
