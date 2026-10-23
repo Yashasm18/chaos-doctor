@@ -226,25 +226,47 @@ python -m http.server -d site 8000     # then open http://localhost:8000
 
 ## Project layout
 
-```
-chaos-doctor/              the Agent Skill (SKILL.md, references/, scripts/)
-src/chaos_doctor/
-  attacks.py               attack menu, built on agentic-chaos faults
-  scan.py                  runs attacks, applies contracts, computes the score
-  doctor.py                Doctor AI + rule-based fallback + call-site check
-  attacker.py              Attacker AI + fallback
-  recipes.py, guards.py    fix recipes and the decorators they insert
-  patcher.py               ast-based patching and diffs
-  battle.py                the Attacker vs Doctor loop
-  aios_export.py           AIOS v0.4 Run export
-  simulated.py             offline model used by example agents
-  cli.py                   the chaos-doctor command
-examples/shop_agent/       the fragile demo agent + synthetic data
-examples/leaderboard/      agent patterns scored before and after a battle
-benchmark/                 20-case Doctor accuracy benchmark
-site/, scripts/           demo site (GitHub Pages), its build script, live_demo.py
-docs/images/               static flowchart image (for slides)
-tests/                     pytest suite (runs offline)
+```text
+chaos-doctor/                     (repo root)
+├── src/chaos_doctor/             the Python package
+│   ├── cli.py                    the chaos-doctor command and its subcommands
+│   ├── attacks.py                attack menu, built on agentic-chaos faults
+│   ├── scan.py                   runs attacks, applies contracts, computes the 0-100 score
+│   ├── doctor.py                 Doctor AI, rule-based fallback, call-site check
+│   ├── attacker.py               Attacker AI and its fallback
+│   ├── recipes.py                the fixed menu of fix recipes
+│   ├── guards.py                 the decorators those recipes insert
+│   ├── patcher.py                ast-based patching and diffs
+│   ├── battle.py                 the Attacker vs Doctor loop
+│   ├── llm.py                    talks to Ollama (JSON-schema replies)
+│   ├── config.py                 settings from environment variables
+│   ├── aios_export.py            AIOS v0.4 Run export
+│   ├── live_server.py            local server behind chaos-doctor live
+│   └── simulated.py              offline model used by example agents
+├── chaos-doctor/                 the Agent Skill
+│   ├── SKILL.md                  skill instructions (validated in CI)
+│   ├── references/               FAULTS.md, RECIPES.md, AGENT_CONTRACT.md
+│   └── scripts/doctor_check.sh   checks the install and the model
+├── examples/
+│   ├── shop_agent/               the fragile demo agent + synthetic data
+│   └── leaderboard/              3 agent patterns scored before/after
+├── benchmark/                    20-case Doctor accuracy benchmark
+│   ├── run.py                    runs the benchmark
+│   ├── agents/                   helpdesk and travel test agents
+│   └── RESULTS.md                the numbers (qwen3:4b: 18/20)
+├── site/                         demo site on GitHub Pages
+│   ├── index.html, style.css     the page
+│   ├── app.js                    battle arena (recorded + live)
+│   ├── loop.js                   interactive how-it-works diagram
+│   └── battles/                  recorded battle logs
+├── scripts/
+│   ├── build_site.py             copies agent + results into site/data/
+│   └── live_demo.py              terminal version of the live demo
+├── docs/
+│   ├── DEMO.md                   live demo runbook for judges
+│   └── images/                   static flowchart (for slides)
+├── tests/                        pytest suite, runs offline (53 tests)
+└── .github/                      CI, Pages deploy, issue and PR templates
 ```
 
 ## Sources and credits
