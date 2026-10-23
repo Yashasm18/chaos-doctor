@@ -138,7 +138,19 @@
   <!-- HOW -->
   <section class="section" id="how">
     <div class="head"><h2>How it works</h2><p class="muted">Two open-weight models take turns. agentic-chaos does the breaking and the judging. Everything else is plain, testable code.</p></div>
-    <figure class="flow card"><img src="data/how-it-works.svg" alt="Flowchart: scan, score, Doctor AI, patch, verify, Attacker AI, repeat" loading="lazy" width="1000" height="600"></figure>
+    <div class="loop card">
+      <div class="loop-top">
+        <div class="legend">
+          <span><i class="sw you"></i>your agent</span>
+          <span><i class="sw doc"></i>open-weight model · Doctor</span>
+          <span><i class="sw atk"></i>open-weight model · Attacker</span>
+          <span><i class="sw plain"></i>deterministic code</span>
+        </div>
+        <button class="btn" id="loop-play" type="button">▶ Walk me through it</button>
+      </div>
+      <div class="loop-scroll"><svg id="loop-svg" viewBox="0 0 972 352" role="img" aria-label="The Chaos Doctor loop: your agent, scan, score, Doctor AI, patch, verify, Attacker AI, back to scan"></svg></div>
+      <div class="loop-detail" id="loop-detail" aria-live="polite"></div>
+    </div>
     <div class="cards3 steps">
       <div class="card"><span class="num">1-2</span><h3>Break and score</h3><p>Faults from <a href="https://github.com/DeepAgentLabs/agentic-chaos" target="_blank" rel="noopener">agentic-chaos</a> hit the model client and tools. Its contracts plus the agent's own check give a pass rate per attack.</p></div>
       <div class="card doc-card"><span class="num">3</span><h3>Diagnose</h3><p>The Doctor (Qwen3) reads the failure and the code and answers in strict JSON: root cause, function, one recipe from a fixed menu, parameters.</p></div>
@@ -201,5 +213,6 @@ chaos-doctor scan examples/shop_agent/agent.py --min-score 70</pre>
   </footer>
 
   <script src="app.js"></script>
+  <script src="loop.js"></script>
 </body>
 </html>

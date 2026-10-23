@@ -20,7 +20,6 @@ def main() -> None:
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
     shutil.copy(ROOT / "examples/shop_agent/agent.py", OUT / "shop_agent.py.txt")
-    shutil.copy(ROOT / "docs/images/how-it-works.svg", OUT / "how-it-works.svg")
 
     bench = {}
     for f in sorted((ROOT / "benchmark/results").glob("*.json")):
