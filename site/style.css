@@ -202,9 +202,44 @@ b { font-weight: 650; }
 .tl-step.done { opacity: 0.45; }
 .tl-step.now { outline: 2px solid var(--text); outline-offset: 1px; opacity: 1; }
 
-/* how + results */
-.flow { padding: 14px; margin: 0 0 14px; background: #fff; }
-.flow img { width: 100%; height: auto; display: block; }
+/* how: interactive loop diagram */
+.loop { padding: 18px; margin: 0 0 14px; }
+.loop-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 4px; border: 2px solid; display: inline-block; }
+.sw.you { border-color: #60a5fa; background: rgba(96, 165, 250, 0.15); }
+.sw.doc { border-color: var(--doc); background: var(--doc-soft); }
+.sw.atk { border-color: var(--atk); background: var(--atk-soft); }
+.sw.plain { border-color: var(--line-2); background: var(--panel-2); }
+#loop-svg { width: 100%; height: auto; display: block; overflow: visible; }
+#loop-svg .edge { fill: none; stroke: #3a4a62; stroke-width: 1.6; }
+#loop-svg .edge.flow { stroke: var(--muted); stroke-dasharray: 5 6; animation: dash 1.2s linear infinite; }
+#loop-svg .edge.hot { stroke: var(--text); stroke-width: 2.2; }
+@keyframes dash { to { stroke-dashoffset: -22; } }
+#loop-svg .elabel { fill: var(--muted); font: italic 12px Inter, sans-serif; }
+#loop-svg .node { cursor: pointer; outline: none; }
+#loop-svg .node rect { fill: var(--panel-2); stroke: var(--line-2); stroke-width: 1.4; transition: stroke 0.2s, fill 0.2s, filter 0.2s; }
+#loop-svg .node.you rect { stroke: #60a5fa; fill: rgba(96, 165, 250, 0.08); }
+#loop-svg .node.doc rect { stroke: var(--doc); fill: rgba(34, 211, 160, 0.07); stroke-width: 2; }
+#loop-svg .node.atk rect { stroke: var(--atk); fill: rgba(251, 90, 114, 0.07); stroke-width: 2; }
+#loop-svg .node .t { fill: var(--text); font: 700 15px Inter, sans-serif; }
+#loop-svg .node.doc .t { fill: var(--doc); }
+#loop-svg .node.atk .t { fill: var(--atk); }
+#loop-svg .node .b { fill: var(--muted); font: 12.5px Inter, sans-serif; }
+#loop-svg .node .n { fill: var(--muted); font: 600 11px "JetBrains Mono", monospace; }
+#loop-svg .node:hover rect, #loop-svg .node:focus-visible rect { stroke: var(--text); }
+#loop-svg .node.sel rect { stroke: var(--text); stroke-width: 2.4; filter: drop-shadow(0 0 10px rgba(232, 238, 246, 0.25)); }
+#loop-svg .packet { fill: var(--doc); filter: drop-shadow(0 0 6px var(--doc)); }
+.loop-detail { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; align-items: start; margin-top: 10px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); min-height: 86px; }
+.loop-detail .d-step { grid-row: span 2; font-family: var(--mono); font-size: 13px; font-weight: 700; border: 1px solid var(--line-2); border-radius: 10px; padding: 8px 12px; }
+.loop-detail h3 { margin: 0; font-size: 16px; }
+.loop-detail p { margin: 0; color: #b6c2d3; font-size: 14.5px; }
+.loop-detail .who { font-size: 12px; font-weight: 600; margin-left: 8px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); }
+.loop-detail .who.doc { color: var(--doc); border-color: rgba(34, 211, 160, 0.45); }
+.loop-detail .who.atk { color: var(--atk); border-color: rgba(251, 90, 114, 0.45); }
+
+/* results */
 .steps .num { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 8px; padding: 2px 8px; }
 .doc-card { border-color: rgba(34, 211, 160, 0.4); }
 .atk-card { border-color: rgba(251, 90, 114, 0.4); }
@@ -251,4 +286,12 @@ b { font-weight: 650; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* keep the loop diagram readable on phones: scroll sideways instead of shrinking */
+.loop-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 760px) {
+  #loop-svg { min-width: 760px; }
+  .loop-detail { grid-template-columns: 1fr; }
+  .loop-detail .d-step { grid-row: auto; justify-self: start; }
 }

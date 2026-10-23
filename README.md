@@ -21,7 +21,38 @@ Built at [Hacktoberfest Hack Day Bengaluru 2026](https://hacktober.awsatria.tech
 
 ## How it works
 
-![How Chaos Doctor works: your agent is scanned with agentic-chaos faults and scored; the Doctor AI prescribes a fix; the patcher adds a guard decorator; verify keeps or rolls back the patch; the Attacker AI picks the next attack and the loop repeats](docs/images/how-it-works.svg)
+```mermaid
+flowchart TD
+    agent["<b>Your agent</b><br/>agent.py exposes<br/>client, TOOLS, run()"]
+    scan["<b>1 · Scan</b><br/>agentic-chaos injects faults<br/>into the model + tools"]
+    score["<b>2 · Score 0-100</b><br/>agentic-chaos contracts<br/>+ the agent's check()"]
+    doctor["<b>3 · Doctor AI</b><br/>Qwen3 reads the failure<br/>→ JSON prescription"]
+    patch["<b>4 · Patch</b><br/>ast adds one guard<br/>decorator, must parse"]
+    verify["<b>5 · Verify</b><br/>re-scan: keep if the score<br/>goes up, else roll back"]
+    attacker["<b>6 · Attacker AI</b><br/>Qwen3 reads the patched code,<br/>picks the next attack"]
+
+    agent -->|"round 1: 5 classic faults"| scan
+    scan --> score --> doctor --> patch --> verify
+    verify -->|"still failing: next fix"| doctor
+    verify -->|"all pass: next round"| attacker
+    attacker -->|"new attack, incl. prompt injection it writes"| scan
+
+    classDef ai_doc fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46
+    classDef ai_atk fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#9f1239
+    classDef you fill:#eff6ff,stroke:#3b82f6,stroke-width:1.5px,color:#1e3a8a
+    classDef code fill:#f8fafc,stroke:#94a3b8,stroke-width:1px,color:#0f172a
+    class doctor ai_doc
+    class attacker ai_atk
+    class agent you
+    class scan,score,patch,verify code
+```
+
+<sub>Green: the Doctor model. Red: the Attacker model. Grey: deterministic code, no AI.
+Interactive version on the [demo site](https://yashasm18.github.io/chaos-doctor/#how).</sub>
+
+**What you get:** a `battle.json` log (replayed on the demo site), the patched agent with
+reviewable diffs, AIOS v0.4 Run artifacts for the DeepAgentLabs tools, and a CI gate
+(`scan --min-score 70`).
 
 | Step | What happens | Who does it |
 | --- | --- | --- |
@@ -197,7 +228,7 @@ examples/shop_agent/       the fragile demo agent + synthetic data
 examples/leaderboard/      agent patterns scored before and after a battle
 benchmark/                 20-case Doctor accuracy benchmark
 site/, scripts/           demo site (GitHub Pages) and its build script
-docs/images/               the flowchart above
+docs/images/               static flowchart image (for slides)
 tests/                     pytest suite (runs offline)
 ```
 
