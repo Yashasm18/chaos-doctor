@@ -69,8 +69,21 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(raw)
 
+    def _from_this_page(self) -> bool:
+        """Only our own page may use the API: blocks other websites (CSRF) and DNS rebinding."""
+        port = self.server.server_address[1]
+        own = {f"localhost:{port}", f"127.0.0.1:{port}"}
+        if self.headers.get("Host", "") not in own:
+            return False
+        origin = self.headers.get("Origin")
+        return origin is None or origin.removeprefix("http://") in own
+
     def do_GET(self) -> None:  # noqa: N802
         url = urlparse(self.path)
+        if url.path.startswith("/api/") and not self._from_this_page():
+            return self._json(
+                {"error": "forbidden: only the local Chaos Doctor page may call this"}, 403
+            )
         if url.path == "/api/live/health":
             status = self.live.model_status()
             return self._json({"live": True, "model": self.live.settings.model, **status})
