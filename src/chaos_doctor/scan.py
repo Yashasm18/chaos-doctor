@@ -10,7 +10,6 @@ An agent file must expose (see examples/shop_agent/agent.py):
 
 from __future__ import annotations
 
-import importlib.util
 import sys
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -39,14 +38,16 @@ class AgentContractError(ValueError):
 def load_agent(path: str | Path) -> ModuleType:
     path = Path(path).resolve()
     name = f"chaos_doctor_agent_{uuid.uuid4().hex[:8]}"
-    spec = importlib.util.spec_from_file_location(name, path)
-    if spec is None or spec.loader is None:
-        raise AgentContractError(f"Cannot import {path}")
-    module = importlib.util.module_from_spec(spec)
+    module = ModuleType(name)
+    module.__file__ = str(path)
     sys.modules[name] = module
     sys.path.insert(0, str(path.parent))
     try:
-        spec.loader.exec_module(module)
+        # Compile from source every time, never from __pycache__: a patch that keeps the file
+        # size (attempts=4 -> attempts=6) inside the same second would load stale bytecode.
+        exec(compile(path.read_text(), str(path), "exec"), module.__dict__)
+    except SyntaxError as exc:
+        raise AgentContractError(f"Cannot import {path}: {exc}") from exc
     finally:
         sys.path.remove(str(path.parent))
     missing = [attr for attr in REQUIRED if not hasattr(module, attr)]
