@@ -28,7 +28,7 @@ dependencies = [
 [project.optional-dependencies]
 data = ["great-generator>=0.1.8", "pandas>=2.0"]
 dashboard = ["streamlit>=1.36"]
-dev = ["pytest>=8.0", "ruff>=0.6"]
+dev = ["pytest>=8.0", "ruff>=0.6", "jsonschema>=4.23"]
 
 [project.scripts]
 chaos-doctor = "chaos_doctor.cli:app"

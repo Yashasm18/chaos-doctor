@@ -14,6 +14,7 @@ from rich.syntax import Syntax
 from rich.table import Table
 
 from chaos_doctor import doctor
+from chaos_doctor.aios_export import scan_to_runs, write_runs
 from chaos_doctor.attacks import standard_attacks
 from chaos_doctor.battle import battle as run_battle
 from chaos_doctor.config import load_settings
@@ -28,6 +29,7 @@ STATE = Path(".chaos-doctor")
 AgentArg = typer.Argument(..., exists=True, dir_okay=False, help="Path to the agent .py file")
 OfflineOpt = typer.Option(False, "--offline", help="Use the rule-based doctor, no model needed")
 TrialsOpt = typer.Option(None, "--trials", help="Runs per attack (default from settings)")
+AiosOpt = typer.Option(None, "--aios", help="Also write each run as an AIOS v0.4 Run artifact here")
 
 
 def _llm(offline: bool):
@@ -77,11 +79,15 @@ def scan_cmd(
     agent: Path = AgentArg,
     trials: int = TrialsOpt,
     min_score: int = typer.Option(0, "--min-score", help="Exit 1 if the score is lower (CI gate)"),
+    aios: Path = AiosOpt,
 ) -> None:
     """Attack the agent with the 5 standard faults and print its resilience score."""
     result = _scan(agent, trials)
     _print_scan(result, f"Chaos scan: {agent.name}")
     _save("last_scan.json", result.to_dict())
+    if aios:
+        paths = write_runs(scan_to_runs(result), aios)
+        console.print(f"Wrote {len(paths)} AIOS Run artifacts to {aios}")
     if result.score < min_score:
         console.print(f"[red]Score {result.score} is below the gate of {min_score}.[/]")
         raise typer.Exit(1)
@@ -162,6 +168,7 @@ def battle_cmd(
     trials: int = TrialsOpt,
     rounds: int = typer.Option(None, "--rounds", help="Max rounds (default from settings)"),
     out: Path = typer.Option(None, "--out", help="Output folder for the patched agent + log"),
+    aios: Path = AiosOpt,
 ):
     """Attacker vs Doctor, round after round, until the agent is battle-tested."""
     llm, settings = _llm(offline)
@@ -205,6 +212,7 @@ def battle_cmd(
             max_rounds=rounds or settings.max_rounds,
             target=settings.target_score,
             emit=show,
+            aios_dir=aios,
         )
     except LLMError as exc:
         console.print(f"[red]{exc}[/]\nTip: run with --offline to use the rule-based doctor.")

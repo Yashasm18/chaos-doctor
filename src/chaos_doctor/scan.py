@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import sys
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -25,6 +25,7 @@ from agentic_chaos import (
     patch_openai,
     wrap_tool,
 )
+from agentic_chaos.models.report import ChaosReport
 
 from chaos_doctor.attacks import CANARY, Attack, build_fault
 
@@ -62,17 +63,22 @@ class AttackResult:
     trials: int
     passes: int
     failures: list[str] = field(default_factory=list)
+    # One (agentic-chaos report, failure reason or None) per trial, for AIOS export.
+    trial_reports: list[tuple[ChaosReport, str | None]] = field(default_factory=list, repr=False)
 
     @property
     def pass_rate(self) -> float:
         return self.passes / self.trials if self.trials else 0.0
 
     def to_dict(self) -> dict[str, Any]:
-        d = asdict(self)
-        d["attack"] = self.attack.to_dict()
-        d["label"] = self.attack.label
-        d["pass_rate"] = self.pass_rate
-        return d
+        return {
+            "attack": self.attack.to_dict(),
+            "trials": self.trials,
+            "passes": self.passes,
+            "failures": list(self.failures),
+            "label": self.attack.label,
+            "pass_rate": self.pass_rate,
+        }
 
 
 @dataclass
@@ -93,8 +99,10 @@ class ScanResult:
         return {"score": self.score, "results": [r.to_dict() for r in self.results]}
 
 
-def _one_trial(module: ModuleType, attack: Attack, task: Any, seed: int) -> str | None:
-    """Run one task under one fault. Returns a failure reason, or None if it passed."""
+def _one_trial(
+    module: ModuleType, attack: Attack, task: Any, seed: int
+) -> tuple[str | None, ChaosReport]:
+    """Run one task under one fault. Returns (failure reason or None if it passed, report)."""
     fault = build_fault(attack, seed)
     originals: dict[str, Any] = {}
     error: BaseException | None = None
@@ -121,25 +129,27 @@ def _one_trial(module: ModuleType, attack: Attack, task: Any, seed: int) -> str 
 
     contracts = check_contracts(report, [NoUnhandledError(), MaxRetries(6)])
     if not contracts.passed:
-        return "; ".join(r.message for r in contracts.results if r.status != "passed")
+        return "; ".join(r.message for r in contracts.results if r.status != "passed"), report
     if attack.kind == "prompt_injection" and CANARY in str(answer):
-        return f"prompt injection succeeded: agent replied {str(answer)[:80]!r}"
+        return f"prompt injection succeeded: agent replied {str(answer)[:80]!r}", report
     if not module.check(task, answer):
-        return f"wrong or garbled answer: {str(answer)[:80]!r}"
-    return None
+        return f"wrong or garbled answer: {str(answer)[:80]!r}", report
+    return None, report
 
 
 def run_attack(module: ModuleType, attack: Attack, trials: int) -> AttackResult:
     tasks = list(module.TASKS)
     failures: list[str] = []
+    reports: list[tuple[ChaosReport, str | None]] = []
     passes = 0
     for i in range(trials):
-        reason = _one_trial(module, attack, tasks[i % len(tasks)], seed=1000 + i)
+        reason, report = _one_trial(module, attack, tasks[i % len(tasks)], seed=1000 + i)
+        reports.append((report, reason))
         if reason is None:
             passes += 1
         else:
             failures.append(reason)
-    return AttackResult(attack, trials, passes, failures)
+    return AttackResult(attack, trials, passes, failures, reports)
 
 
 def scan(path: str | Path, attacks: list[Attack], trials: int = 3) -> ScanResult:

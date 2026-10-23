@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from chaos_doctor import attacker, doctor
+from chaos_doctor.aios_export import scan_to_runs, write_runs
 from chaos_doctor.attacks import Attack, standard_attacks
 from chaos_doctor.llm import JsonLLM
 from chaos_doctor.patcher import apply_recipe, diff
@@ -97,6 +98,7 @@ def battle(
     max_rounds: int = 5,
     target: int = 90,
     emit: Event | None = None,
+    aios_dir: Path | None = None,
 ) -> BattleLog:
     # Work on a copy of the agent's folder (it may load data files next to itself).
     shutil.copytree(
@@ -114,12 +116,18 @@ def battle(
         if emit:
             emit(kind, data)
 
+    def export(result: ScanResult, rnd: int, phase: str) -> None:
+        if aios_dir is not None:
+            ctx = {"battle_round": rnd, "battle_phase": phase, "battle_started_at": log.started_at}
+            write_runs(scan_to_runs(result, ctx), aios_dir, prefix=f"r{rnd}-{phase}-")
+
     tools = list(load_agent(work).TOOLS)
     attacks = standard_attacks(tools)
     result = scan(work, attacks, trials)
     record("round", {"round": 1, "attacks": [a.to_dict() for a in attacks]})
     record("scan", {"round": 1, "phase": "attacked", **result.to_dict()})
     log.scores.append({"round": 1, "phase": "attacked", "score": result.score})
+    export(result, 1, "attacked")
 
     for rnd in range(1, max_rounds + 1):
         if rnd > 1:
@@ -139,10 +147,12 @@ def battle(
             result = scan(work, attacks, trials)
             record("scan", {"round": rnd, "phase": "attacked", **result.to_dict()})
             log.scores.append({"round": rnd, "phase": "attacked", "score": result.score})
+            export(result, rnd, "attacked")
 
         result = heal(work, attacks, result, llm, trials, record)
         record("scan", {"round": rnd, "phase": "healed", **result.to_dict()})
         log.scores.append({"round": rnd, "phase": "healed", "score": result.score})
+        export(result, rnd, "healed")
         # Give the Attacker at least two tries before declaring the agent battle-tested.
         if rnd >= 3 and result.score >= target:
             break
