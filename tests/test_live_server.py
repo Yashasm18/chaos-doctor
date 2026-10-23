@@ -30,3 +30,18 @@ def test_live_server_streams_a_battle():
     assert kinds[0] == "meta" and kinds[-1] == "end"
     assert {"round", "scan", "diagnosis", "patch", "done", "thinking"} <= set(kinds)
     assert next(e for e in events if e["kind"] == "done")["final_score"] == 100
+
+
+def test_live_api_rejects_other_origins_and_hosts():
+    url = serve(load_settings(), port=18785, offline=True, trials=1, rounds=1)
+    ok = httpx.get(url + "api/live/health", timeout=5)
+    assert ok.status_code == 200
+    evil_origin = httpx.get(
+        url + "api/live/start", headers={"Origin": "https://evil.example"}, timeout=5
+    )
+    assert evil_origin.status_code == 403
+    rebinding = httpx.get(
+        url + "api/live/health", headers={"Host": "evil.example:18785"}, timeout=5
+    )
+    assert rebinding.status_code == 403
+    assert httpx.get(url, headers={"Host": "evil.example:18785"}, timeout=5).status_code == 200
