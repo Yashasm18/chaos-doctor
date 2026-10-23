@@ -155,6 +155,17 @@ chaos-doctor battle examples/shop_agent/agent.py --offline --aios aios-out/
 `battle` never touches your original file. It works on a copy in
 `.chaos-doctor/battle-<time>/` and writes `battle.json` (the full log) next to the patched agent.
 
+### Present it live
+
+`scripts/live_demo.py` runs a real battle one step at a time for an audience: it explains each
+step in plain words, runs it, shows the result (the Doctor's and Attacker's JSON, the diff, the
+score) and waits for Enter. The runbook for our judging demo is in [docs/DEMO.md](docs/DEMO.md).
+
+```bash
+python scripts/live_demo.py --model qwen3:4b   # with the open-weight model
+python scripts/live_demo.py --offline          # no model, a few seconds
+```
+
 ### Settings
 
 | Variable | Default | Meaning |
@@ -227,7 +238,7 @@ src/chaos_doctor/
 examples/shop_agent/       the fragile demo agent + synthetic data
 examples/leaderboard/      agent patterns scored before and after a battle
 benchmark/                 20-case Doctor accuracy benchmark
-site/, scripts/           demo site (GitHub Pages) and its build script
+site/, scripts/           demo site (GitHub Pages), its build script, live_demo.py
 docs/images/               static flowchart image (for slides)
 tests/                     pytest suite (runs offline)
 ```
