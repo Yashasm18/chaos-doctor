@@ -5,107 +5,199 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chaos Doctor</title>
   <meta name="description" content="Two open-weight AIs fight over your agent: one attacks it, one heals it, until it's battle-tested.">
+  <meta property="og:title" content="Chaos Doctor">
+  <meta property="og:description" content="Two open-weight AIs fight over your agent: one attacks it, one heals it, until it's battle-tested.">
+  <meta property="og:url" content="https://yashasm18.github.io/chaos-doctor/">
+  <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2310b981'/><path d='M14 7h4v7h7v4h-7v7h-4v-7H7v-4h7z' fill='white'/></svg>">
 </head>
 <body>
-  <header class="top">
-    <a class="brand" href="#"><span class="logo">+</span> Chaos Doctor</a>
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top"><span class="logo">+</span>Chaos Doctor</a>
     <nav>
-      <a href="#battle">Battle</a>
+      <a href="#arena">The battle</a>
       <a href="#how">How it works</a>
-      <a class="gh" href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">GitHub</a>
+      <a href="#results">Results</a>
+      <a href="#try">Try it</a>
+      <a class="gh" href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </header>
 
-  <section class="hero">
-    <p class="eyebrow">Hacktoberfest Hack Day Bengaluru 2026 · Best Open-Source AI Project</p>
-    <h1>Two AIs fight over your agent.<br><span class="atk">One attacks it,</span> <span class="doc">one heals it.</span></h1>
-    <p class="lede">Chaos Doctor breaks an LLM agent on purpose, explains why it broke with a local
-      open-weight model, patches the code, and proves the fix with a resilience score.
-      Press play to watch a real battle.</p>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <p class="pill">Hacktoberfest Hack Day Bengaluru 2026 · Best Open-Source AI Project</p>
+    <h1>Two AIs fight over your agent.<br><span class="atk">One attacks it.</span> <span class="doc">One heals it.</span></h1>
+    <p class="lede">AI agents break in production: models time out, providers rate-limit, tools crash,
+      replies come back garbled, and hidden text hijacks them. <b>Chaos Doctor</b> breaks your agent on
+      purpose, finds why with a <b>local open-weight model</b>, patches the code, and proves the fix with a
+      <b>0-100 resilience score</b>.</p>
+    <div class="cta">
+      <a class="btn primary big" href="#arena">▶ Watch a real battle</a>
+      <a class="btn big" href="#how">How it works</a>
+    </div>
+    <div class="stats" id="stats">
+      <div><b>0 → 100</b><span>demo agent's score</span></div>
+      <div><b>18/20</b><span>bugs fixed by a 4B model</span></div>
+      <div><b>6/6</b><span>diagnoses made by the AI</span></div>
+      <div><b>100% local</b><span>Qwen3 via Ollama, no API keys</span></div>
+    </div>
   </section>
 
-  <main id="battle" class="battle">
-    <div class="controls">
-      <div class="source" role="tablist" aria-label="Battle source">
-        <button class="tab active" data-src="battles/qwen3-4b.json" role="tab">Real AI battle <small>qwen3:4b</small></button>
-        <button class="tab" data-src="battles/offline-rules.json" role="tab">Rule-based battle <small>no model</small></button>
-        <button class="tab live" data-src="live" role="tab">Run one now <small>live, offline</small></button>
-      </div>
-      <div class="player">
-        <button id="play" class="btn primary" aria-label="Play">Play</button>
-        <button id="step" class="btn" aria-label="Next step">Step</button>
-        <button id="restart" class="btn" aria-label="Restart">Restart</button>
-        <button id="all" class="btn" aria-label="Show everything">Skip to end</button>
-        <label class="speed">Speed
-          <select id="speed">
-            <option value="1600">Slow</option>
-            <option value="900" selected>Normal</option>
-            <option value="350">Fast</option>
-          </select>
-        </label>
-      </div>
+  <!-- PROBLEM -->
+  <section class="section problem">
+    <div class="cards3">
+      <div class="card"><span class="ico atk-bg">⏱</span><h3>The model stalls</h3><p>Timeouts and 429 rate-limit storms crash an agent that never retries.</p></div>
+      <div class="card"><span class="ico atk-bg">🔧</span><h3>A tool breaks</h3><p>One failing API call and the whole answer is gone.</p></div>
+      <div class="card"><span class="ico atk-bg">🎭</span><h3>The data lies</h3><p>Garbled replies and hidden prompt injections slip straight through to users.</p></div>
+    </div>
+  </section>
+
+  <!-- ARENA -->
+  <section class="section" id="arena">
+    <div class="head">
+      <h2>The battle</h2>
+      <p class="muted">A real battle recorded on an 8 GB laptop with <b>qwen3:4b</b>. Step through it with
+        <kbd>←</kbd> <kbd>→</kbd>, press <kbd>Space</kbd> to play, or click the timeline.</p>
     </div>
 
-    <div class="grid">
-      <section class="feed" aria-live="polite">
-        <div id="feed"></div>
-        <div id="empty" class="empty">Press <b>Play</b> to start the battle.</div>
-      </section>
+    <div class="arena" id="arena-box">
+      <div class="arena-top">
+        <div class="source" role="tablist" aria-label="Which battle">
+          <button class="tab active" data-src="battles/qwen3-4b.json" role="tab" aria-selected="true">Real AI battle <small>qwen3:4b</small></button>
+          <button class="tab" data-src="battles/offline-rules.json" role="tab" aria-selected="false">Rule-based <small>no model</small></button>
+        </div>
+        <ol class="phases" id="phases" aria-label="Loop phase">
+          <li data-p="attack">Attack</li><li data-p="scan">Score</li><li data-p="diagnose">Diagnose</li><li data-p="patch">Patch</li><li data-p="verify">Verify</li>
+        </ol>
+      </div>
 
-      <aside class="side">
-        <div class="card score-card">
-          <div class="score-label">Resilience score</div>
-          <div class="score-row">
-            <div id="score" class="score">--</div>
-            <div class="score-of">/100</div>
+      <div class="caption" id="caption" aria-live="polite">
+        <span class="step-no" id="step-no">0/0</span>
+        <p id="caption-text">Loading the battle...</p>
+      </div>
+
+      <div class="stage">
+        <!-- attacker -->
+        <aside class="panel attacker" id="attacker">
+          <div class="p-head"><span class="avatar atk-bg">⚔</span><div><b>Attacker AI</b><small id="atk-model">-</small></div></div>
+          <div class="p-body" id="atk-body"><p class="muted small">Waiting for the first attack.</p></div>
+        </aside>
+
+        <!-- agent -->
+        <div class="agent-col">
+          <div class="vitals">
+            <div class="ring-wrap">
+              <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                <circle cx="60" cy="60" r="52" class="ring-bg"/>
+                <circle cx="60" cy="60" r="52" class="ring-fg" id="ring"/>
+              </svg>
+              <div class="ring-num"><b id="score">--</b><small>/100</small></div>
+            </div>
+            <div class="vitals-right">
+              <div class="v-label">Resilience under each attack</div>
+              <div class="tiles" id="tiles"></div>
+              <svg class="spark" id="spark" viewBox="0 0 300 46" aria-label="Score over the battle"></svg>
+            </div>
           </div>
-          <div id="score-note" class="score-note">Waiting for the first scan</div>
-          <svg id="chart" viewBox="0 0 320 150" role="img" aria-label="Score over the battle"></svg>
+          <div class="code">
+            <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">examples/shop_agent/agent.py</span><span class="code-badge" id="code-badge"></span></div>
+            <pre class="code-body" id="code"></pre>
+          </div>
         </div>
 
-        <div class="card">
-          <h3>Agent under test</h3>
-          <p class="muted small">A shop support agent: "Where is my order?" It looks the order up
-            (<code>get_order</code> &rarr; <code>lookup_order</code> tool) and asks an LLM to reply
-            (<code>ask_llm</code>). It starts with no protection at all.</p>
-          <div id="guards" class="guards"></div>
-        </div>
+        <!-- doctor -->
+        <aside class="panel doctor" id="doctor">
+          <div class="p-head"><span class="avatar doc-bg">+</span><div><b>Doctor AI</b><small id="doc-model">-</small></div></div>
+          <div class="p-body" id="doc-body"><p class="muted small">Waiting for something to break.</p></div>
+        </aside>
+      </div>
 
-        <div class="card meta">
-          <div><span class="muted">Doctor + Attacker</span><b id="meta-model">-</b></div>
-          <div><span class="muted">Faults by</span><b>agentic-chaos</b></div>
-          <div><span class="muted">Shop data by</span><b>great-generator</b></div>
-          <div><span class="muted">Doctor fixes</span><b id="meta-fixes">-</b></div>
-          <div><span class="muted">Recorded</span><b id="meta-date">-</b></div>
+      <div class="controls">
+        <div class="buttons">
+          <button class="btn icon" id="prev" aria-label="Previous step" title="Previous (←)">‹</button>
+          <button class="btn primary" id="play" aria-label="Play">▶ Play</button>
+          <button class="btn icon" id="next" aria-label="Next step" title="Next (→)">›</button>
+          <button class="btn ghost" id="restart" title="Back to the start">↺ Restart</button>
+          <label class="speed">Speed
+            <select id="speed"><option value="2600">Presenter</option><option value="1500" selected>Normal</option><option value="600">Fast</option></select>
+          </label>
         </div>
-      </aside>
+        <div class="timeline" id="timeline" aria-label="Battle timeline"></div>
+      </div>
     </div>
-  </main>
+    <p class="muted small center note">The Doctor and Attacker cards show what the model actually returned. "Placement corrected" means our
+      call-site check moved a fix to the function that makes the failing call.</p>
+  </section>
 
-  <section id="how" class="how">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><b class="atk">Attack</b><span>Faults from agentic-chaos hit the agent: model timeouts, 429 storms, tool crashes, garbled replies, too-long prompts, and prompt injections the Attacker writes itself.</span></li>
-      <li><b>Score</b><span>Every run is judged by agentic-chaos contracts (no crash, bounded retries) plus the agent's own answer check. Score = average pass rate, 0 to 100.</span></li>
-      <li><b class="doc">Diagnose</b><span>The Doctor model reads the failure and the source and answers in strict JSON: root cause, which function, which fix recipe, which parameters.</span></li>
-      <li><b>Patch &amp; verify</b><span>One guard decorator is added with Python's <code>ast</code>, so the code always parses. The agent is re-tested and a patch that doesn't help is rolled back.</span></li>
-    </ol>
-    <p class="muted center">Both AIs choose from fixed, executable menus, which is what makes a small model reliable.
-      Open-weight models: <a href="https://huggingface.co/Qwen/Qwen3-8B" target="_blank" rel="noopener">Qwen3-8B</a> /
-      <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noopener">Qwen3-4B</a> (Apache-2.0) via Ollama.</p>
-    <pre class="try"><span class="muted"># try it yourself</span>
+  <!-- HOW -->
+  <section class="section" id="how">
+    <div class="head"><h2>How it works</h2><p class="muted">Two open-weight models take turns. agentic-chaos does the breaking and the judging. Everything else is plain, testable code.</p></div>
+    <figure class="flow card"><img src="data/how-it-works.svg" alt="Flowchart: scan, score, Doctor AI, patch, verify, Attacker AI, repeat" loading="lazy" width="1000" height="600"></figure>
+    <div class="cards3 steps">
+      <div class="card"><span class="num">1-2</span><h3>Break and score</h3><p>Faults from <a href="https://github.com/DeepAgentLabs/agentic-chaos" target="_blank" rel="noopener">agentic-chaos</a> hit the model client and tools. Its contracts plus the agent's own check give a pass rate per attack.</p></div>
+      <div class="card doc-card"><span class="num">3</span><h3>Diagnose</h3><p>The Doctor (Qwen3) reads the failure and the code and answers in strict JSON: root cause, function, one recipe from a fixed menu, parameters.</p></div>
+      <div class="card"><span class="num">4-5</span><h3>Patch and verify</h3><p>An <code>ast</code> patcher adds one guard decorator, so the code always parses. Re-scan: keep the patch if the score rises, roll back if not.</p></div>
+      <div class="card atk-card"><span class="num">6</span><h3>Attack again</h3><p>The Attacker (Qwen3) reads the patched code and picks the next attack, writing its own prompt-injection payloads.</p></div>
+      <div class="card"><span class="num">✓</span><h3>Why a small model works</h3><p>Both AIs choose from fixed, executable menus. They never write free-form code, and every change is a reviewable diff.</p></div>
+      <div class="card"><span class="num">↗</span><h3>Fits the ecosystem</h3><p>Ships as an Agent Skill, a CLI, a CI gate (<code>--min-score</code>) and AIOS v0.4 Run export for the DeepAgentLabs tools.</p></div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="section" id="results">
+    <div class="head"><h2>Results</h2><p class="muted">Measured, not promised. All numbers come from files in the repo.</p></div>
+    <div class="results">
+      <div class="card">
+        <h3>Doctor benchmark · 20 planted bugs</h3>
+        <p class="muted small">3 agents × 6 attacks + 2 "strengthen" cases. One diagnosis each, then re-attack.</p>
+        <div class="bars" id="bench"></div>
+        <a class="small" href="https://github.com/Yashasm18/chaos-doctor/blob/main/benchmark/RESULTS.md" target="_blank" rel="noopener">Full results ↗</a>
+      </div>
+      <div class="card">
+        <h3>Agent pattern leaderboard</h3>
+        <p class="muted small">Common agent designs, before → after an offline battle.</p>
+        <div class="lb" id="lb"></div>
+        <a class="small" href="https://github.com/Yashasm18/chaos-doctor/blob/main/examples/leaderboard/README.md" target="_blank" rel="noopener">What we learned ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRY -->
+  <section class="section" id="try">
+    <div class="head"><h2>Run it yourself</h2><p class="muted">Python 3.10+. No model needed for <code>--offline</code>; add Ollama for the AI Doctor.</p></div>
+    <div class="try-grid">
+      <div class="card term">
+        <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">terminal</span><button class="copy" data-copy="cmd1">Copy</button></div>
+<pre id="cmd1">git clone https://github.com/Yashasm18/chaos-doctor.git
+cd chaos-doctor
+python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 chaos-doctor battle examples/shop_agent/agent.py --offline</pre>
+      </div>
+      <div class="card term">
+        <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="fname">with the open-weight model</span><button class="copy" data-copy="cmd2">Copy</button></div>
+<pre id="cmd2">ollama pull qwen3:4b
+export CHAOS_DOCTOR_MODEL=qwen3:4b
+chaos-doctor battle examples/shop_agent/agent.py
+chaos-doctor scan examples/shop_agent/agent.py --min-score 70</pre>
+      </div>
+    </div>
   </section>
 
   <footer class="foot">
-    <span>Apache-2.0 · <a href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">github.com/Yashasm18/chaos-doctor</a></span>
-    <span class="muted">Built on <a href="https://github.com/DeepAgentLabs" target="_blank" rel="noopener">DeepAgentLabs</a> agentic-chaos</span>
+    <div>
+      <b>Chaos Doctor</b> · Apache-2.0 · <a href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">github.com/Yashasm18/chaos-doctor</a>
+    </div>
+    <div class="muted small">Built on <a href="https://github.com/DeepAgentLabs/agentic-chaos" target="_blank" rel="noopener">agentic-chaos</a> (MIT),
+      <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noopener">Qwen3</a> (Apache-2.0) via <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a>,
+      and <a href="https://github.com/GreatDataLabs/great-generator" target="_blank" rel="noopener">great-generator</a>.
+      Full credits in the <a href="https://github.com/Yashasm18/chaos-doctor#sources-and-credits" target="_blank" rel="noopener">README</a>.</div>
   </footer>
 
   <script src="app.js"></script>
