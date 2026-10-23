@@ -8,8 +8,8 @@ our own laptop. Target: about 5 minutes, plus questions.
 | Role | Who does it | Job |
 | --- | --- | --- |
 | **Presenter** | the best speaker | Talks. Explains each step while the screen shows it. |
-| **Driver** | owner of the laptop with Ollama | Runs `scripts/live_demo.py` and presses Enter when the presenter is ready. |
-| **Backup** | the third person | Keeps the [demo site](https://yashasm18.github.io/chaos-doctor/) and the GitHub repo open on a second laptop, runs the `--offline` fallback if needed, answers code questions. |
+| **Driver** | owner of the laptop with Ollama | Runs `chaos-doctor live`, scrolls the page and presses **Live battle** when the presenter is ready. |
+| **Backup** | the third person | Keeps the GitHub repo and the [public demo site](https://yashasm18.github.io/chaos-doctor/) open on a second laptop, has the `--offline` fallback ready, answers code questions. |
 
 ## Before judging (do this by 5:15 PM)
 
@@ -23,48 +23,57 @@ ollama pull qwen3:8b                       # 16 GB RAM / GPU; use qwen3:4b on 8 
 ollama run qwen3:8b "say ready"            # warm-up: loads the model into memory once
 ```
 
-Then a dry run, straight through:
+Then a dry run of the **live page**:
 
 ```bash
-python scripts/live_demo.py --model qwen3:8b --no-pause
+chaos-doctor live --model qwen3:8b
 ```
+
+It opens the demo page in the browser, served from this laptop. In **The battle**, a new tab
+appears: **● Live battle · qwen3:8b · this laptop**. Press it and let one battle run to the end
+("Battle over: 0 → 100/100"). Note how long it took. If port 8765 is busy it picks the next free
+one and prints the address.
 
 Checklist:
 
-- [ ] Dry run finished and ended with "Battle over" (note how long it took)
-- [ ] Terminal font is large (Cmd/Ctrl and + a few times) and the window is full screen
+- [ ] Dry run finished with "Battle over" (note the time)
+- [ ] Browser is full screen (F11 / Ctrl+Cmd+F) and zoomed so the back row can read it
 - [ ] Other heavy apps are closed (the model needs the RAM)
 - [ ] Laptop is charged and plugged in; Wi-Fi is not needed, everything is local
-- [ ] Backup laptop has the demo site and the repo open
+- [ ] Backup laptop has the repo open and `python scripts/live_demo.py --offline` ready
 - [ ] Everyone is wearing their wristband
 
-Windows (PowerShell) equivalents: `.venv\Scripts\Activate.ps1`, then
-`python scripts\live_demo.py --model qwen3:8b`.
+Windows (PowerShell): activate with `.venv\Scripts\Activate.ps1`; the command is the same.
 
-## The demo, step by step
+## The demo, from the start
 
-Start it with pauses (the default):
+Run `chaos-doctor live --model qwen3:8b` before the judges arrive and keep the page at the top.
 
-```bash
-python scripts/live_demo.py --model qwen3:8b
-```
-
-The script prints a heading and a one-line explanation for each step, does it for real, then
-waits for Enter. What the presenter says:
-
-| Step | On screen | Say (in your own words) |
+| Part | On screen | Say (in your own words) |
 | --- | --- | --- |
-| Intro | Banner: model, agentic-chaos, working copy | "Agents break in production. Chaos Doctor breaks them on purpose, finds why with a local open-weight model, fixes the code and proves it with a score. Everything you see runs on this laptop, no cloud." |
-| 1 · Meet the agent | `get_order` and `ask_llm` code | "A shop support bot. One tool call, one LLM call. No retries, no timeouts, no input checks, like most agent code." |
-| 2 · Attack | Table of 5 attacks, all ✗, **score 0/100** | "agentic-chaos, from DeepAgentLabs, injects the five failures that hit real agents. Every one crashes or fools it. Score zero." |
-| 3 · Diagnose | Spinner, then the Doctor's JSON | "Now the Doctor, Qwen3 running here, reads the failure and the code. It must answer in strict JSON and pick from a fixed menu of fixes. That's why a small model is reliable: it chooses, it doesn't free-write code." Point at `root_cause`, `recipe`, `target_function`. |
-| 4 · Patch and verify | A diff with one `@guards...` line, score goes up | "The fix is one decorator added with Python's ast, so the code always parses. We re-test everything; the patch is kept only because the score went up." |
-| 5 · Heal everything | One line per fix, then all ✓ | "It keeps going until every attack is survived." |
-| 6 · Attacker strikes back | The Attacker's JSON (often a prompt injection), score drops, then heals | "Now the other AI reads the patched code and invents a new attack, here a prompt injection hidden in the order data. The Doctor answers it with an input sanitizer." |
-| Battle over | Score history and the guards added | "From zero to battle-tested. Every change is a plain diff you can review." |
+| 1 · What it is (30 s) | Top of the page: headline, the 4 numbers, the 3 problem cards | "Agents break in production: models time out, tools crash, replies come back garbled, data hides instructions. Chaos Doctor breaks your agent on purpose, finds why with a local open-weight model, fixes the code and proves it with a score." |
+| 2 · How it works (45 s) | **How it works**: press **Walk me through it** | "Two open-weight models take turns. agentic-chaos from DeepAgentLabs does the breaking and the judging. The Doctor fixes, the Attacker finds the next weakness. Everything grey is plain code: the AI only chooses, it never free-writes code." |
+| 3 · The live fight (3-5 min) | **The battle → ● Live battle** | Narrate as it streams, below. |
+| 4 · Proof (1 min) | **Results**, then GitHub | "On 20 planted bugs the 4B model fixed 18 by itself. Green CI, an Agent Skill, AIOS export, every change via a reviewed PR." |
 
-While a model is thinking (20-60 s), fill the time: explain the agent contract, the attack menu,
-or show the repo on the backup laptop (tests, CI, the benchmark).
+**Narrating the live fight.** The caption always says what is happening; read it and add:
+
+| When you see | Say |
+| --- | --- |
+| Round 1, all tiles ✗, score **0/100** | "Five real failures injected. Every one crashes or fools the agent." |
+| "**Doctor AI** (qwen3:8b) is thinking… 12 s", Doctor panel glowing | "That's a real call to the model on this laptop, right now. It's reading the failure and the code." |
+| Doctor card: root cause, `@guards.retry(...)`, confidence | "It answered in JSON: the cause, the fix from a fixed menu, and where to put it." |
+| A highlighted line appears in the code, score goes up, "✓ Kept" | "One decorator added with Python's ast. We re-test everything; it's kept only because the score went up." |
+| "**Attacker AI** is thinking about its next attack…", then a red card "chosen by AI" | "Now the other AI reads the patched code and looks for what's still unprotected." Read its reason out loud. |
+| Score drops, then the Doctor answers (often `@guards.sanitize`) | "It found a hole: a prompt injection hidden in the order data. Watch the Doctor close it." |
+| "Battle over: 0 → 100/100" | "From zero to battle-tested, live. Every highlighted line is a real diff." |
+
+While a model is thinking (20-60 s), point at the code panel, the tiles, or the Attacker's
+reasoning. You can also click earlier timeline steps to recap; the page catches up to the live
+step when you click the last one.
+
+**Terminal alternative:** `python scripts/live_demo.py --model qwen3:8b` runs the same battle in
+the terminal, pausing for Enter at each step.
 
 ## Then show the proof (1 minute)
 
@@ -80,8 +89,9 @@ On the backup laptop:
 
 | Problem | Do this |
 | --- | --- |
+| No "Live battle" tab | The page must be opened from `chaos-doctor live`, not GitHub Pages. Check the address it printed. |
 | Ollama not running / model missing | The script says so and continues with the rule-based Doctor. Or start `ollama serve` and rerun. |
-| The model is very slow | Ctrl+C, then `python scripts/live_demo.py --offline` (a few seconds). Say: "same loop, rule-based Doctor; the AI version is recorded on the site." |
+| The model is very slow | Stop with Ctrl+C and start `chaos-doctor live --offline` (the same live page, rule-based Doctor, seconds). Or show the "Real AI battle" recording. |
 | Laptop crashes or freezes | Backup laptop: the demo site's "Real AI battle" replay, presented with the arrow keys. |
 | A judge asks "is it real?" | Open the working copy it printed (`.chaos-doctor/live-<time>/agent.py`) and show the guards in the file. |
 

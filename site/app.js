@@ -321,9 +321,87 @@
   document.querySelectorAll(".tab").forEach((tab) =>
     tab.addEventListener("click", () => {
       document.querySelectorAll(".tab").forEach((t) => { t.classList.toggle("active", t === tab); t.setAttribute("aria-selected", t === tab); });
-      load(tab.dataset.src);
+      if (tab.dataset.src === "live") startLive();
+      else { closeLive(); document.getElementById("arena-sub").innerHTML = RECORDED_SUB; load(tab.dataset.src); }
     }),
   );
+
+  // ---------- live mode: only when the page is served by `chaos-doctor live` ----------
+  let es = null, thinking = null, thinkTimer = null, liveMode = "model";
+  function closeLive() {
+    if (es) { es.close(); es = null; }
+    thinking = null;
+    clearInterval(thinkTimer);
+  }
+  function showThinking() {
+    const t = thinking;
+    if (!t || S.i < S.scenes.length - 1) return; // don't overwrite a step the presenter went back to
+    const doc = t.who === "doctor";
+    const who = doc ? "Doctor" : "Attacker";
+    const about = doc ? `how to fix the <b>${esc(kindName(label(t.attack || "")).toLowerCase())}</b>` : "its next attack";
+    const tick = () => {
+      const secs = Math.round((Date.now() - t.since) / 1000);
+      $("#caption-text").innerHTML = `<span class="spinner ${t.who}"></span><b class="${doc ? "doc" : "atk"}">${who} AI</b> (${esc(S.log.model)}) is thinking about ${about}… <span class="muted">${secs} s</span>`;
+    };
+    tick();
+    clearInterval(thinkTimer);
+    thinkTimer = setInterval(tick, 1000);
+    $(doc ? "#doctor" : "#attacker").classList.add("live");
+    $(doc ? "#doc-body" : "#atk-body").innerHTML =
+      `<p class="thinking"><span class="spinner ${t.who}"></span>Thinking…</p><p class="muted small">A real call to ${esc(S.log.model)} on this laptop. Its answer appears here.</p>`;
+  }
+  const RECORDED_SUB = document.getElementById("arena-sub").innerHTML;
+  function startLive() {
+    stop();
+    closeLive();
+    document.getElementById("arena-sub").innerHTML =
+      '<span class="live-badge">LIVE</span> A real battle running right now on this laptop. Every attack, diagnosis and fix happens as you watch.';
+    S.log = { model: "…", started_at: new Date().toISOString(), events: [] };
+    S.scenes = buildScenes(S.log);
+    codeKey = "";
+    renderTimeline();
+    go(0);
+    $("#caption-text").innerHTML = '<span class="spinner"></span>Starting a real battle on this laptop…<span class="live-badge">LIVE</span>';
+    es = new EventSource(`api/live/start?mode=${liveMode}`);
+    es.onmessage = (msg) => {
+      const ev = JSON.parse(msg.data);
+      if (ev.kind === "meta") {
+        S.log.model = ev.model;
+        S.log.started_at = ev.started_at;
+        const who = ev.model.startsWith("rules") ? "rules (no model)" : `${ev.model} · live on this laptop`;
+        $("#atk-model").textContent = who;
+        $("#doc-model").textContent = who;
+        return;
+      }
+      if (ev.kind === "thinking") { thinking = { ...ev, since: Date.now() }; showThinking(); return; }
+      if (ev.kind === "end") { closeLive(); stop(); return; }
+      if (ev.kind === "error") { closeLive(); $("#caption-text").textContent = `Live battle stopped: ${ev.error}`; return; }
+      thinking = null;
+      clearInterval(thinkTimer);
+      const follow = S.i >= S.scenes.length - 1;
+      S.log.events.push(ev);
+      S.scenes = buildScenes(S.log);
+      renderTimeline();
+      if (follow) go(S.scenes.length - 1); else render();
+      if (follow && ev.kind !== "done") $("#caption-text").insertAdjacentHTML("beforeend", '<span class="live-badge">LIVE</span>');
+    };
+    es.onerror = () => {
+      if (!es) return;
+      closeLive();
+      $("#caption-text").textContent =
+        "The live connection closed. If you just restarted, the previous battle may still be finishing: wait ~30 s and press Live battle again. Otherwise check that `chaos-doctor live` is still running.";
+    };
+  }
+  fetch("api/live/health", { cache: "no-store" })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((h) => {
+      if (!h || !h.live) return;
+      const tab = document.querySelector(".tab.live");
+      liveMode = h.ready ? "model" : "offline";
+      $("#live-sub").textContent = h.ready ? `${h.model} · this laptop` : `rules · ${h.reason}`;
+      tab.hidden = false;
+    })
+    .catch(() => {});
   document.addEventListener("keydown", (e) => {
     if (!S.scenes.length || e.target.closest("input, select, textarea")) return;
     if (e.key === "ArrowRight") { e.preventDefault(); stop(); go(S.i + 1); stop(); }

@@ -62,7 +62,7 @@
   <section class="section" id="arena">
     <div class="head">
       <h2>The battle</h2>
-      <p class="muted">A real battle recorded on an 8 GB laptop with <b>qwen3:4b</b>. Step through it with
+      <p class="muted" id="arena-sub">A real battle recorded on an 8 GB laptop with <b>qwen3:4b</b>. Step through it with
         <kbd>←</kbd> <kbd>→</kbd>, press <kbd>Space</kbd> to play, or click the timeline.</p>
     </div>
 
@@ -71,6 +71,7 @@
         <div class="source" role="tablist" aria-label="Which battle">
           <button class="tab active" data-src="battles/qwen3-4b.json" role="tab" aria-selected="true">Real AI battle <small>qwen3:4b</small></button>
           <button class="tab" data-src="battles/offline-rules.json" role="tab" aria-selected="false">Rule-based <small>no model</small></button>
+          <button class="tab live" data-src="live" role="tab" aria-selected="false" hidden>● Live battle <small id="live-sub">this laptop</small></button>
         </div>
         <ol class="phases" id="phases" aria-label="Loop phase">
           <li data-p="attack">Attack</li><li data-p="scan">Score</li><li data-p="diagnose">Diagnose</li><li data-p="patch">Patch</li><li data-p="verify">Verify</li>

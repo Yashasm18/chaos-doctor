@@ -157,14 +157,18 @@ chaos-doctor battle examples/shop_agent/agent.py --offline --aios aios-out/
 
 ### Present it live
 
-`scripts/live_demo.py` runs a real battle one step at a time for an audience: it explains each
-step in plain words, runs it, shows the result (the Doctor's and Attacker's JSON, the diff, the
-score) and waits for Enter. The runbook for our judging demo is in [docs/DEMO.md](docs/DEMO.md).
+`chaos-doctor live` serves the demo page from your laptop and streams a **real battle into it as
+it happens**: a "● Live battle" tab appears in the arena, and every attack, every "Doctor AI is
+thinking…" model call, every diagnosis and every fix shows up the moment it happens.
 
 ```bash
-python scripts/live_demo.py --model qwen3:4b   # with the open-weight model
-python scripts/live_demo.py --offline          # no model, a few seconds
+chaos-doctor live --model qwen3:4b    # opens http://localhost:8765 (or the next free port)
+chaos-doctor live --offline           # same page, rule-based Doctor, seconds
 ```
+
+In the terminal instead: `python scripts/live_demo.py --model qwen3:4b` runs the same battle
+step by step, waiting for Enter. The runbook for our judging demo is in
+[docs/DEMO.md](docs/DEMO.md).
 
 ### Settings
 

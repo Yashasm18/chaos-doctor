@@ -295,3 +295,14 @@ b { font-weight: 650; }
   .loop-detail { grid-template-columns: 1fr; }
   .loop-detail .d-step { grid-row: auto; justify-self: start; }
 }
+
+/* live mode (served by `chaos-doctor live`) */
+.tab.live { color: var(--atk); }
+.tab.live.active { color: var(--text); box-shadow: inset 0 0 0 1px rgba(251, 90, 114, 0.6); }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line-2); border-top-color: var(--doc); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 4px; }
+.spinner.attacker { border-top-color: var(--atk); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.thinking { display: flex; align-items: center; gap: 8px; font-weight: 600; margin: 0 0 6px; }
+.live-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: var(--atk); border: 1px solid rgba(251, 90, 114, 0.5); border-radius: 999px; padding: 2px 9px; margin-left: 8px; }
+.live-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--atk); animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
