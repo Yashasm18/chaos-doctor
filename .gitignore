@@ -167,7 +167,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs/Zensical documentation
-/site
+# /site  (kept: our demo site lives in site/)
 
 # mypy
 .mypy_cache/
@@ -222,3 +222,5 @@ __marimo__/
 # Chaos Doctor run output
 .chaos-doctor/
 battle-out/
+.vercel/
+.vercel

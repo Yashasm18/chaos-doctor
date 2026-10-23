@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chaos Doctor</title>
+  <meta name="description" content="Two open-weight AIs fight over your agent: one attacks it, one heals it, until it's battle-tested.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2310b981'/><path d='M14 7h4v7h7v4h-7v7h-4v-7H7v-4h7z' fill='white'/></svg>">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#"><span class="logo">+</span> Chaos Doctor</a>
+    <nav>
+      <a href="#battle">Battle</a>
+      <a href="#how">How it works</a>
+      <a class="gh" href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">Hacktoberfest Hack Day Bengaluru 2026 · Best Open-Source AI Project</p>
+    <h1>Two AIs fight over your agent.<br><span class="atk">One attacks it,</span> <span class="doc">one heals it.</span></h1>
+    <p class="lede">Chaos Doctor breaks an LLM agent on purpose, explains why it broke with a local
+      open-weight model, patches the code, and proves the fix with a resilience score.
+      Press play to watch a real battle.</p>
+  </section>
+
+  <main id="battle" class="battle">
+    <div class="controls">
+      <div class="source" role="tablist" aria-label="Battle source">
+        <button class="tab active" data-src="battles/qwen3-4b.json" role="tab">Real AI battle <small>qwen3:4b</small></button>
+        <button class="tab" data-src="battles/offline-rules.json" role="tab">Rule-based battle <small>no model</small></button>
+        <button class="tab live" data-src="live" role="tab">Run one now <small>live, offline</small></button>
+      </div>
+      <div class="player">
+        <button id="play" class="btn primary" aria-label="Play">Play</button>
+        <button id="step" class="btn" aria-label="Next step">Step</button>
+        <button id="restart" class="btn" aria-label="Restart">Restart</button>
+        <button id="all" class="btn" aria-label="Show everything">Skip to end</button>
+        <label class="speed">Speed
+          <select id="speed">
+            <option value="1600">Slow</option>
+            <option value="900" selected>Normal</option>
+            <option value="350">Fast</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="grid">
+      <section class="feed" aria-live="polite">
+        <div id="feed"></div>
+        <div id="empty" class="empty">Press <b>Play</b> to start the battle.</div>
+      </section>
+
+      <aside class="side">
+        <div class="card score-card">
+          <div class="score-label">Resilience score</div>
+          <div class="score-row">
+            <div id="score" class="score">--</div>
+            <div class="score-of">/100</div>
+          </div>
+          <div id="score-note" class="score-note">Waiting for the first scan</div>
+          <svg id="chart" viewBox="0 0 320 150" role="img" aria-label="Score over the battle"></svg>
+        </div>
+
+        <div class="card">
+          <h3>Agent under test</h3>
+          <p class="muted small">A shop support agent: "Where is my order?" It looks the order up
+            (<code>get_order</code> &rarr; <code>lookup_order</code> tool) and asks an LLM to reply
+            (<code>ask_llm</code>). It starts with no protection at all.</p>
+          <div id="guards" class="guards"></div>
+        </div>
+
+        <div class="card meta">
+          <div><span class="muted">Doctor + Attacker</span><b id="meta-model">-</b></div>
+          <div><span class="muted">Faults by</span><b>agentic-chaos</b></div>
+          <div><span class="muted">Shop data by</span><b>great-generator</b></div>
+          <div><span class="muted">Doctor fixes</span><b id="meta-fixes">-</b></div>
+          <div><span class="muted">Recorded</span><b id="meta-date">-</b></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section id="how" class="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><b class="atk">Attack</b><span>Faults from agentic-chaos hit the agent: model timeouts, 429 storms, tool crashes, garbled replies, too-long prompts, and prompt injections the Attacker writes itself.</span></li>
+      <li><b>Score</b><span>Every run is judged by agentic-chaos contracts (no crash, bounded retries) plus the agent's own answer check. Score = average pass rate, 0 to 100.</span></li>
+      <li><b class="doc">Diagnose</b><span>The Doctor model reads the failure and the source and answers in strict JSON: root cause, which function, which fix recipe, which parameters.</span></li>
+      <li><b>Patch &amp; verify</b><span>One guard decorator is added with Python's <code>ast</code>, so the code always parses. The agent is re-tested and a patch that doesn't help is rolled back.</span></li>
+    </ol>
+    <p class="muted center">Both AIs choose from fixed, executable menus, which is what makes a small model reliable.
+      Open-weight models: <a href="https://huggingface.co/Qwen/Qwen3-8B" target="_blank" rel="noopener">Qwen3-8B</a> /
+      <a href="https://huggingface.co/Qwen/Qwen3-4B" target="_blank" rel="noopener">Qwen3-4B</a> (Apache-2.0) via Ollama.</p>
+    <pre class="try"><span class="muted"># try it yourself</span>
+pip install -e ".[dev]"
+chaos-doctor battle examples/shop_agent/agent.py --offline</pre>
+  </section>
+
+  <footer class="foot">
+    <span>Apache-2.0 · <a href="https://github.com/Yashasm18/chaos-doctor" target="_blank" rel="noopener">github.com/Yashasm18/chaos-doctor</a></span>
+    <span class="muted">Built on <a href="https://github.com/DeepAgentLabs" target="_blank" rel="noopener">DeepAgentLabs</a> agentic-chaos</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
