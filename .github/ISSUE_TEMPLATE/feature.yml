@@ -1,0 +1,16 @@
+name: Feature
+description: Propose a new attack, recipe, adapter or improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should it do?
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: How will we know it works?
+      placeholder: "- [ ] ...\n- [ ] test added"

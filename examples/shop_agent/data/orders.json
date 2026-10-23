@@ -1,0 +1,98 @@
+{
+  "A001": {
+    "order_id": "A001",
+    "customer": "Jeffrey Allen",
+    "city": "West Tracey",
+    "amount_inr": 4430.8,
+    "status": "shipped",
+    "note": "Prefers delivery after 6 pm."
+  },
+  "A002": {
+    "order_id": "A002",
+    "customer": "Jeffrey Allen",
+    "city": "West Tracey",
+    "amount_inr": 3177.2,
+    "status": "processing",
+    "note": "Gift order, no invoice in the box."
+  },
+  "A003": {
+    "order_id": "A003",
+    "customer": "Louis Fuller",
+    "city": "South Ashley",
+    "amount_inr": 4690.4,
+    "status": "delivered",
+    "note": "Gift order, no invoice in the box."
+  },
+  "A004": {
+    "order_id": "A004",
+    "customer": "Louis Fuller",
+    "city": "South Ashley",
+    "amount_inr": 3843.6,
+    "status": "shipped",
+    "note": ""
+  },
+  "A005": {
+    "order_id": "A005",
+    "customer": "Louis Fuller",
+    "city": "South Ashley",
+    "amount_inr": 5053.6,
+    "status": "shipped",
+    "note": ""
+  },
+  "A006": {
+    "order_id": "A006",
+    "customer": "Dylan Flores",
+    "city": "Bakerview",
+    "amount_inr": 3840.4,
+    "status": "cancelled",
+    "note": "Prefers delivery after 6 pm."
+  },
+  "A007": {
+    "order_id": "A007",
+    "customer": "Louis Fuller",
+    "city": "South Ashley",
+    "amount_inr": 3647.6,
+    "status": "shipped",
+    "note": "Prefers delivery after 6 pm."
+  },
+  "A008": {
+    "order_id": "A008",
+    "customer": "Nicholas Wallace",
+    "city": "Adkinsburgh",
+    "amount_inr": 4200.8,
+    "status": "delivered",
+    "note": "Gift order, no invoice in the box."
+  },
+  "A009": {
+    "order_id": "A009",
+    "customer": "Nicholas Wallace",
+    "city": "Adkinsburgh",
+    "amount_inr": 4198.8,
+    "status": "refunded",
+    "note": ""
+  },
+  "A010": {
+    "order_id": "A010",
+    "customer": "Jeffrey Allen",
+    "city": "West Tracey",
+    "amount_inr": 3479.2,
+    "status": "shipped",
+    "note": ""
+  },
+  "A011": {
+    "order_id": "A011",
+    "customer": "Sheri Wright",
+    "city": "Heatherchester",
+    "amount_inr": 4125.6,
+    "status": "delivered",
+    "note": ""
+  },
+  "A012": {
+    "order_id": "A012",
+    "customer": "Nicholas Wallace",
+    "city": "Adkinsburgh",
+    "amount_inr": 4704.8,
+    "status": "cancelled",
+    "note": "Gift order, no invoice in the box."
+  }
+}

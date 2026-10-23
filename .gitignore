@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Chaos Doctor run output
+.chaos-doctor/
+battle-out/
