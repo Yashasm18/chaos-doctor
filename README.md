@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Yashasm18/chaos-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/Yashasm18/chaos-doctor/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Live demo](https://img.shields.io/badge/live%20demo-chaos--doctor.vercel.app-10b981.svg)](https://chaos-doctor.vercel.app)
+[![Live demo](https://img.shields.io/badge/live%20demo-GitHub%20Pages-10b981.svg)](https://yashasm18.github.io/chaos-doctor/)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-validated-purple.svg)](chaos-doctor/SKILL.md)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
@@ -13,8 +13,8 @@ crashes, the reply comes back garbled, or someone hides an instruction in the da
 Doctor breaks your agent on purpose, works out why it broke with a **local open-weight model**,
 patches the code, and proves the fix with a **0-100 resilience score**.
 
-**Try it now:** https://chaos-doctor.vercel.app replays a real battle recorded with qwen3:4b,
-or runs a fresh one for you.
+**Try it now:** https://yashasm18.github.io/chaos-doctor/ replays a real battle recorded with qwen3:4b, step by step.
+A mirror at https://chaos-doctor.vercel.app can also run a fresh battle for you on its server.
 
 Built at [Hacktoberfest Hack Day Bengaluru 2026](https://hacktober.awsatria.tech) for the
 **Best Open-Source AI Project** track.
@@ -161,17 +161,21 @@ directory, for example `.opencode/skills/` for [OpenCode](https://opencode.ai/do
 
 ## Demo site
 
-The [live demo](https://chaos-doctor.vercel.app) is a static page in [`site/`](site/) that
-replays `battle.json` logs, plus a Vercel Python function, [`api/battle.py`](api/battle.py), that
-runs a fresh offline battle on request. No model runs in the cloud: the real-model battle is a
-recording, and the page says so.
+The [live demo](https://yashasm18.github.io/chaos-doctor/) is a static page in [`site/`](site/) that replays `battle.json` logs,
+hosted on GitHub Pages and deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
+on every push to `main` that touches `site/`. No model runs in the cloud: the real-model battle is
+a recording, and the page says so.
+
+The [Vercel mirror](https://chaos-doctor.vercel.app) adds a Python function,
+[`api/battle.py`](api/battle.py), that runs a fresh offline battle on request ("Run one now").
+GitHub Pages is static, so there that tab shows the one-line command to run a battle locally
+instead. Vercel deploys are manual (`vercel deploy --prod`).
 
 ```bash
 python -m http.server -d site 8000     # replay only, at http://localhost:8000
 vercel dev                             # replay + live battle API
 ```
 
-Every merge to `main` deploys to Vercel automatically.
 
 ## Project layout
 
@@ -191,7 +195,7 @@ src/chaos_doctor/
 examples/shop_agent/       the fragile demo agent + synthetic data
 examples/leaderboard/      agent patterns scored before and after a battle
 benchmark/                 20-case Doctor accuracy benchmark
-site/, api/                demo site and live battle function (Vercel)
+site/, api/                demo site (GitHub Pages) and live battle function (Vercel)
 docs/images/               the flowchart above
 tests/                     pytest suite (runs offline)
 ```
@@ -221,7 +225,7 @@ Everything Chaos Doctor builds on, where it came from, and what we used it for.
 | Typer, Rich | [fastapi/typer](https://github.com/fastapi/typer) · [Textualize/rich](https://github.com/Textualize/rich) | MIT | The CLI and its terminal output |
 | pytest, ruff, jsonschema | [pytest](https://github.com/pytest-dev/pytest) · [ruff](https://github.com/astral-sh/ruff) · [jsonschema](https://github.com/python-jsonschema/jsonschema) | MIT | Tests, lint/format, AIOS schema validation |
 | Inter, JetBrains Mono | [Google Fonts](https://fonts.google.com) | SIL Open Font License 1.1 | Demo site typography |
-| Vercel | [vercel.com](https://vercel.com) | hosting service | Demo site and the live battle function |
+| GitHub Pages, Vercel | [pages.github.com](https://pages.github.com) · [vercel.com](https://vercel.com) | hosting services | Demo site (Pages); mirror with the live battle function (Vercel) |
 
 ### What we wrote ourselves
 

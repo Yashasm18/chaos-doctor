@@ -226,10 +226,21 @@
       : `${byModel}/${diags.length} by AI · ${patches.filter((p) => p.kept).length}/${patches.length} kept${fixed ? ` · ${fixed} re-placed` : ""}`;
   }
 
+  // GitHub Pages only serves static files, so there is no /api/battle to call there.
+  const HAS_API = !location.hostname.endsWith("github.io");
+  const RUN_LOCALLY =
+    "Live battles need a server, and this page is static. Run a fresh one on your laptop in seconds:" +
+    '<pre class="try" style="text-align:left;margin-top:12px">pip install -e ".[dev]"\nchaos-doctor battle examples/shop_agent/agent.py --offline</pre>' +
+    '<span class="muted small">The two recorded battles above replay real runs, including the qwen3:4b one.</span>';
+
   async function load(src) {
     source = src;
     reset();
     log = null;
+    if (src === "live" && !HAS_API) {
+      empty.innerHTML = RUN_LOCALLY;
+      return;
+    }
     empty.innerHTML = '<span class="spinner"></span>' + (src === "live" ? "Running a fresh battle on the server (about 15 seconds)..." : "Loading battle...");
     try {
       const resp = src === "live" ? await fetch("/api/battle", { method: "POST" }) : await fetch(src, { cache: "no-store" });
@@ -257,6 +268,10 @@
     }),
   );
 
+  if (!HAS_API) {
+    const live = document.querySelector(".tab.live");
+    live.innerHTML = "Run it yourself <small>one command, offline</small>";
+  }
   drawGuards();
   drawChart();
   load(source);

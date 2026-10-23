@@ -9,5 +9,8 @@
       "maxDuration": 60,
       "includeFiles": "{src,examples}/**"
     }
+  },
+  "git": {
+    "deploymentEnabled": false
   }
 }
