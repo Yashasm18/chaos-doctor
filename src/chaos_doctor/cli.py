@@ -221,5 +221,43 @@ def battle_cmd(
     console.print(f"Score history: {scores}\nLog: {out / 'battle.json'}")
 
 
+@app.command("live")
+def live_cmd(
+    model: str = typer.Option(None, "--model", help="Ollama model, e.g. qwen3:8b or qwen3:4b"),
+    offline: bool = OfflineOpt,
+    port: int = typer.Option(8765, "--port", help="Local port for the live page"),
+    trials: int = typer.Option(1, "--trials", help="Runs per attack (1 keeps it snappy)"),
+    rounds: int = typer.Option(3, "--rounds", help="Battle rounds"),
+    no_browser: bool = typer.Option(False, "--no-browser", help="Don't open a browser"),
+):
+    """Open the demo page on this laptop and stream a real battle into it, live."""
+    import os
+    import time
+    import webbrowser
+
+    from chaos_doctor.live_server import serve
+
+    if model:
+        os.environ["CHAOS_DOCTOR_MODEL"] = model
+    settings = load_settings()
+    url = serve(settings, port, offline, trials, rounds)
+    who = "rules (offline)" if offline else settings.model
+    console.print(
+        Panel(
+            f"Live page: [bold]{url}[/]\nModel: {who}\n\n"
+            "Open [bold]The battle[/] and press [bold]Live battle[/]. Ctrl+C to stop.",
+            title="Chaos Doctor live",
+            border_style="green",
+        )
+    )
+    if not no_browser:
+        webbrowser.open(url + "#arena")
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        console.print("Stopped.")
+
+
 if __name__ == "__main__":
     app()

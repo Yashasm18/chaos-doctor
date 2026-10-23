@@ -49,6 +49,7 @@ def heal(
             break
         worst = failing[0]
         source = work.read_text()
+        emit("thinking", {"who": "doctor", "attack": worst.attack.label, "model": bool(llm)})
         diag = doctor.diagnose(llm, source, worst)
         emit("diagnosis", {"attack": worst.attack.label, **diag.to_dict()})
         try:
@@ -111,8 +112,10 @@ def battle(
     log = BattleLog(agent=str(agent_path), model=model_name if llm else "rules (offline)")
 
     def record(kind: str, data: dict[str, Any]) -> None:
-        log.events.append({"kind": kind, "t": datetime.now(timezone.utc).isoformat(), **data})
-        log.save(out_dir / "battle.json")
+        # "thinking" marks a model call in progress: shown live, not kept in the log.
+        if kind != "thinking":
+            log.events.append({"kind": kind, "t": datetime.now(timezone.utc).isoformat(), **data})
+            log.save(out_dir / "battle.json")
         if emit:
             emit(kind, data)
 
@@ -131,6 +134,7 @@ def battle(
 
     for rnd in range(1, max_rounds + 1):
         if rnd > 1:
+            record("thinking", {"who": "attacker", "round": rnd, "model": bool(llm)})
             new_attack = attacker.propose(llm, work.read_text(), attacks, tools)
             if any(
                 a.to_dict() | {"rationale": ""} == new_attack.to_dict() | {"rationale": ""}
