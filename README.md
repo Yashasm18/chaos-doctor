@@ -95,6 +95,23 @@ chaos-doctor scan examples/shop_agent/agent.py --min-score 70  # CI gate
 | `CHAOS_DOCTOR_TARGET` | `90` | Score that ends the battle (after round 3) |
 | `CHAOS_DOCTOR_VICTIM_MODEL` | unset | Run the demo agent on a real model (e.g. `qwen3:0.6b`) instead of its simulator |
 
+## Export to AIOS (DeepAgentLabs ecosystem)
+
+Every trial can be written as an [AI Operations Spec](https://github.com/DeepAgentLabs/ai-operations-spec)
+v0.4-draft **Run** artifact, so battles can be read by any AIOS consumer such as AgenticLens or
+AgenticOps Control Tower:
+
+```bash
+chaos-doctor scan examples/shop_agent/agent.py --aios aios-out/
+chaos-doctor battle examples/shop_agent/agent.py --offline --aios aios-out/
+```
+
+The Run itself comes from agentic-chaos's exporter (which follows the spec's reviewed
+agentic-chaos mapping). Chaos Doctor adds an `io.github.yashasm18.chaos-doctor` extension with
+the attack, verdict, failure reason, scan score and battle round/phase. An offline battle writes
+34 Runs, and every one validates against the official v0.4 `run.schema.json`
+(`tests/test_aios.py` checks this in CI).
+
 ## Use it as an Agent Skill
 
 [`chaos-doctor/`](chaos-doctor/SKILL.md) follows the
@@ -134,6 +151,7 @@ src/chaos_doctor/
   recipes.py, guards.py  fix recipes and the decorators they insert
   patcher.py             ast-based patching and diffs
   battle.py              the Attacker vs Doctor loop
+  aios_export.py         AIOS v0.4 Run export
   cli.py                 chaos-doctor command
 examples/shop_agent/     the fragile demo agent and its synthetic data
 tests/                   pytest suite (runs offline)
