@@ -1,10 +1,10 @@
 ---
 name: chaos-doctor
 description: Tests how well an LLM agent survives failures, then finds and fixes the weak spots. Injects faults (model timeouts, rate-limit storms, tool errors, garbled output, too-long prompts, prompt injection hidden in tool data), gives a resilience score from 0 to 100, uses a local open-weight model to explain the root cause, patches the code with a small reviewed decorator, and re-tests to prove the fix. Use when the user asks to test, harden, battle-test or check the reliability or resilience of an AI agent, or mentions chaos testing, fault injection, retries, timeouts, fallbacks or prompt injection in an agent.
-license: Apache-2.0
+license: PolyForm-Noncommercial-1.0.0
 compatibility: Requires Python 3.10+, the chaos-doctor package (pip install -e . from the repo), and Ollama running locally with qwen3:8b or qwen3:4b pulled. Use --offline to run without a model.
 metadata:
-  author: chaos-doctor-team
+  author: Yashas M
   version: "0.1.0"
   repository: https://github.com/Yashasm18/chaos-doctor
 ---

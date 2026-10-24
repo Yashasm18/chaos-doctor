@@ -7,13 +7,12 @@ name = "chaos-doctor"
 version = "0.1.0"
 description = "Two open-weight AIs fight over your agent: one attacks it, one heals it, until it's battle-tested."
 readme = "README.md"
-license = "Apache-2.0"
+license = "PolyForm-Noncommercial-1.0.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
-authors = [{ name = "Chaos Doctor team" }]
+authors = [{ name = "Yashas M" }]
 keywords = ["llm", "agents", "chaos-engineering", "resilience", "ollama", "agent-skills"]
 classifiers = [
-  "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Topic :: Software Development :: Testing",
 ]

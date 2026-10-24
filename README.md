@@ -1,7 +1,7 @@
 # Chaos Doctor
 
 [![CI](https://github.com/Yashasm18/chaos-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/Yashasm18/chaos-doctor/actions/workflows/ci.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![License: PolyForm Noncommercial](https://img.shields.io/badge/license-PolyForm%20Noncommercial-orange.svg)](LICENSE)
 [![Live demo](https://img.shields.io/badge/live%20demo-GitHub%20Pages-10b981.svg)](https://yashasm18.github.io/chaos-doctor/)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-validated-purple.svg)](chaos-doctor/SKILL.md)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
@@ -15,9 +15,6 @@ patches the code, and proves the fix with a **0-100 resilience score**.
 
 **Try it now:** https://yashasm18.github.io/chaos-doctor/ replays a real battle recorded with
 qwen3:4b, step by step, with a plain-English caption for every move.
-
-Built at [Hacktoberfest Hack Day Bengaluru 2026](https://hacktober.awsatria.tech) for the
-**Best Open-Source AI Project** track.
 
 ## How it works
 
@@ -322,11 +319,14 @@ request, and the team understands and can explain all of it.
 See [CONTRIBUTING.md](CONTRIBUTING.md). In short: branch from `main`, open a PR that links its
 issue, and get one review. `pytest` and `ruff` must pass.
 
-## Team
+## Author
 
-Built by [@Yashasm18](https://github.com/Yashasm18), [@supreeth1856](https://github.com/supreeth1856)
-and [@vamshi82966-sys](https://github.com/vamshi82966-sys) at Hacktoberfest Hack Day Bengaluru 2026.
+Built by [@Yashasm18](https://github.com/Yashasm18).
 
 ## License
 
-[Apache-2.0](LICENSE)
+[PolyForm Noncommercial 1.0.0](LICENSE). Free for personal, learning, research and other
+noncommercial use. Commercial use (including inside a company or a paid product) needs a paid
+license: [open an issue](https://github.com/Yashasm18/chaos-doctor/issues) to ask.
+
+Versions published before this change remain available under Apache-2.0.
